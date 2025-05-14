@@ -1,0 +1,102 @@
+<header class="header">
+    <div class="logo">PacketLite</div>
+    <nav [class.active]="menuAberto" class="nav">
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
+      <button class="btn outline" (click)="entrar()">Entrar</button>
+      <button class="btn primary" (click)="registrar()">Registrar-se</button>
+    </nav>
+    <div class="menu-toggle" (click)="toggleMenu()">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+  </header>
+  
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Simule Redes de Forma Simples e Eficaz.</h1>
+      <p>Crie, configure e teste suas redes diretamente no navegador, sem instalações complexas. Ideal para aprendizado e prototipagem rápida.</p>
+      <div class="cta-buttons">
+        <button class="btn primary" (click)="registrar()">Começar Agora</button>
+        <button class="btn outline" (click)="verDemo()">Ver Demonstração</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="logo.jpg" alt="Interface do simulador PacketLite">
+    </div>
+  </section>
+  
+  <section class="benefits">
+    <h2>Por Que Escolher o PacketLite?</h2>
+    <div class="benefit-cards">
+      <div class="card">
+        <span role="img" aria-label="Acessível na web">🌐</span>
+        <h3>Acessível na Web</h3>
+        <p>Simule redes diretamente do navegador, sem downloads.</p>
+      </div>
+      <div class="card">
+        <span role="img" aria-label="Interface intuitiva">🧠</span>
+        <h3>Interface Intuitiva</h3>
+        <p>Fácil de usar, mesmo para iniciantes.</p>
+      </div>
+      <div class="card">
+        <span role="img" aria-label="Rápido e leve">⚡</span>
+        <h3>Rápido e Leve</h3>
+        <p>Performance otimizada para aprendizado eficiente.</p>
+      </div>
+      <div class="card">
+        <span role="img" aria-label="Ideal para estudos">📘</span>
+        <h3>Ideal para Estudos</h3>
+        <p>Perfeito para cursos, escolas e bootcamps de TI.</p>
+      </div>
+    </div>
+  </section>
+  
+  <section class="features" id="funcionalidades">
+    <h2>Principais Funcionalidades</h2>
+    <div class="feature-grid">
+      <div class="feature">
+        <h3>Drag & Drop de Dispositivos</h3>
+        <p>Monte topologias facilmente com arrastar e soltar.</p>
+      </div>
+      <div class="feature">
+        <h3>Configuração CLI Simplificada</h3>
+        <p>Configure roteadores e switches com terminal simulado.</p>
+      </div>
+      <div class="feature">
+        <h3>Conexão Automática</h3>
+        <p>Cabos se conectam automaticamente ao arrastar dispositivos.</p>
+      </div>
+      <div class="feature">
+        <h3>Simulação em Tempo Real</h3>
+        <p>Avalie pacotes e rotas em tempo real.</p>
+      </div>
+    </div>
+  </section>
+  
+  <section class="about" id="sobre">
+    <h2>Sobre o PacketLite</h2>
+    <p>Inspirado no Packet Tracer, o PacketLite nasceu com o objetivo de fornecer uma alternativa mais leve, acessível e baseada na web para aprendizado de redes.</p>
+    <a href="https://github.com/MateusFelix2004/packetlite" target="_blank" class="btn outline">Visite Nosso GitHub</a>
+  </section>
+  
+  <section class="final-cta">
+    <h2>Pronto para Simular?</h2>
+    <p>Junte-se à comunidade PacketLite e leve seus conhecimentos de rede para o próximo nível.</p>
+    <div class="cta-buttons">
+      <button class="btn primary" (click)="registrar()">Começar Agora</button>
+      <button class="btn outline" (click)="entrar()">Entrar</button>
+    </div>
+  </section>
+  
+  <footer class="footer" id="contato">
+    <p>© {{ anoAtual }} PacketLite. Todos os direitos reservados.</p>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos de Serviço</a>
+      <a href="mailto:contato@packetlite.app">Contato</a>
+    </div>
+  </footer>
+  

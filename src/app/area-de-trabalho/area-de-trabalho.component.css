@@ -1,0 +1,367 @@
+/* Estilos Gerais */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F8F9FA;
+  color: #333333;
+}
+
+html, body {
+  height: 100%; /* Permite que 100vh funcione corretamente */
+  overflow: hidden; /* Adicionado para evitar scroll na página inteira se o main-content rolar */
+}
+
+/* Cabeçalho */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  height: 60px;
+  background-color: #F8F9FA;
+  border-bottom: 1px solid #6C757D;
+}
+
+.header .logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2E649C;
+}
+
+.nav > ul {
+  list-style-type: none;
+  display: flex;
+  gap: 24px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav a:hover {
+  color: #007BFF;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #FFFFFF;
+  border: 1px solid #6C757D;
+  border-radius: 4px;
+  list-style-type: none;
+  padding: 8px 0;
+  min-width: 200px;
+  z-index: 2;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 8px 16px;
+  color: #333333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #333333;
+  color: whitesmoke;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.arrow {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* Área de Trabalho Principal */
+.main-content {
+  display: flex;
+  height: calc(100vh - 60px); /* Ajustar para altura do cabeçalho */
+}
+
+/* Seções colapsáveis */
+.collapsible-section {
+  margin-bottom: 16px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  /* Removido: overflow: hidden; - O overflow agora é controlado no .collapsible-content */
+}
+
+.collapsible-header {
+  width: 100%;
+  background-color: #444;
+  color: #F8F9FA;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  /* Adicionado: seta de colapsar */
+  justify-content: flex-start;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.collapsible-header:hover {
+  background-color: #555;
+}
+
+/* Estilo da seta para colapsar/expandir */
+.collapsible-header .collapse-arrow {
+  transition: transform 0.3s ease;
+}
+
+/* Rotação da seta quando ativo */
+.collapsible-section.active .collapsible-header .collapse-arrow {
+  transform: rotate(180deg);
+}
+
+.collapsible-content {
+  max-height: 0; /* Escondido por padrão */
+  overflow: hidden; /* Esconde o conteúdo que transborda */
+  transition: max-height 0.3s ease; /* Transição suave */
+  background-color: #2d2d2d;
+}
+
+/* Adicione esta classe no JS quando a seção estiver ativa */
+.collapsible-section.active .collapsible-content {
+  /* Valor grande o suficiente para acomodar o conteúdo, simples e funcional */
+  max-height: 500px;
+  /* O scroll interno desta seção se o conteúdo exceder o max-height */
+  overflow-y: auto;
+}
+
+.collapsible-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  /* Removido: max-height: 200px; - O max-height e overflow agora estão no .collapsible-content */
+  /* Removido: overflow-y: auto; */
+}
+
+.collapsible-content a {
+  display: block;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #F8F9FA;
+}
+
+.collapsible-content a:hover {
+  background-color: #007BFF;
+}
+
+/* Sidebar */
+
+/* Removido: Bloco de estilos antigos da sidebar ul, li, a - eles são agora gerenciados pelas classes .collapsible-content */
+
+.sidebar {
+  width: 400px;
+  background-color: #333333;
+  color: #F8F9FA;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  height: calc(100vh - 60px); /* Altura definida para a sidebar */
+  overflow-y: auto; /* Permitir scroll na sidebar principal */
+  transition: width 0.3s ease;
+  position: relative;
+  /* Adicionado: Garante que a sidebar não encolha desnecessariamente, essencial com flexbox */
+  flex-shrink: 0;
+}
+
+.sidebar.closed {
+  width: 5px;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Botão fixado do lado esquerdo da tela, ao lado da sidebar */
+.toggle-sidebar-btn {
+  position: fixed;
+  top: 65px;
+  left: 399px; /* alinhado com a borda da sidebar aberta */
+  background-color: #333;
+  border: 1px solid #555;
+  /*border-radius: 50%;*/
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  color: #fff;
+  transition: left 0.3s ease;
+}
+
+/* Quando a sidebar está fechada, o botão se move para a borda esquerda */
+.sidebar.closed ~ .toggle-sidebar-btn {
+  left: 0;
+}
+
+.workspace {
+  flex-grow: 1;
+  padding: 24px;
+  width: 100%;
+  background-color: #FFFFFF;
+}
+
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.workspace-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.action-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #F8F9FA;
+  background-color: #2E649C;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+  background-color: #265682;
+}
+
+/* Rodapé */
+.footer {
+  background-color: #333333;
+  color: #F8F9FA;
+  text-align: center;
+  padding: 12px;
+  width: 100%;
+  position: relative; /* Mudança de absolute para relative */
+  z-index: 3;
+}
+
+/* Fim rodapé */
+
+/* Interatividade da workspace interatividade */
+.workspace {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #F0F0F0;
+
+  /* Fundo malhado (grid) */
+  background-image:
+      linear-gradient(to right, #ccc 1px, transparent 1px),
+      linear-gradient(to bottom, #ccc 1px, transparent 1px);
+  background-size: 20px 20px;
+
+  z-index: 1;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.workspace * {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.workspace::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Remove essa camada escura para não apagar o fundo malhado */
+  /* background-color: rgba(0, 0, 0, 0.05); */
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+.workspace-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  z-index: 1;
+
+  /* Sem background aqui */
+}
+
+.workspace-element {
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #3498db;
+  border-radius: 4px;
+  z-index: 2;
+}
+/* Fim da interatividade da workspace */
+
+
+/* Estilização da grid de ferramentas por colapses */
+
+.collapsible-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+  gap: 12px;
+  padding: 12px;
+}
+
+.grid-item {
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  color: #F8F9FA;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.grid-item:hover {
+  background-color: #555;
+}
+
+.grid-item img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin-bottom: 8px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.grid-item span {
+  display: block;
+}
