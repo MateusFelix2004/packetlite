@@ -70,15 +70,7 @@
             </ul>
           </div>
         </div>
-        <div class="collapsible-section">
-          <button class="collapsible-header" (click)="toggleSection($event)"><span class="material-symbols-outlined icon" data="icon">chevron_right</span>Formas geométricas</button>
-          <div class="collapsible-content">
-            <ul>
-              <li><a href="#">Quadrado</a></li>
-              <li><a href="#">Círculo</a></li>
-            </ul>
-          </div>
-        </div>
+        
     </aside>
     <button class="toggle-sidebar-btn" (click)="toggleSidebar()" title="Ferramentas">
         <span class="material-symbols-outlined">{{ sidebarOpen ? 'chevron_left' : 'chevron_right' }}</span>
@@ -98,12 +90,14 @@
       style="touch-action: none;"
     >
         <div class="workspace-area">
-          <div *ngFor="let element of elements" [ngStyle]="{ left: element.x + 'px', top: element.y + 'px', width: element.width + 'px', height: element.height + 'px', backgroundColor: element.color }" class="workspace-element">
-            <!-- Conteúdo dos elementos --> 
-            <img src="assets/dispositivos/icones/computador/computador.svg"/>
-          </div>
+          <app-dispositivo-rede
+            *ngFor="let element of elements"
+            [dispositivo]="element"
+            (posicaoMudou)="atualizarPosicao(element, $event)"
+          />
+
         </div>
-      </section>
+    </section>
   </main>
   <!--
   <footer class="footer">

@@ -1,0 +1,12 @@
+<div
+  class="dispositivo-rede"
+  [ngStyle]="{
+    left: dispositivo.x + 'px',
+    top: dispositivo.y + 'px',
+    width: dispositivo.width + 'px',
+    height: dispositivo.height + 'px',
+  }"
+>
+  <img [src]="dispositivo.icon" alt="Ícone do dispositivo" />
+  <div class="titulo">{{ dispositivo.nome }}</div>
+</div>

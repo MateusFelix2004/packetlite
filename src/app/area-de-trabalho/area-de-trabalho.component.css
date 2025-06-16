@@ -308,6 +308,7 @@ html, body {
 }
 
 .workspace-area {
+  cursor: grab;
   position: absolute;
   top: 0;
   left: 0;
