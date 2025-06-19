@@ -18,9 +18,20 @@ import { DispositivoRedeComponent } from '../dispositivo-rede/dispositivo-rede.c
 })
 export class AreaDeTrabalhoComponent {
 
-  // Estado do sidebar (aberto ou fechado)
-  sidebarOpen: boolean = true;
-  isDraggingDevice = false;
+// Estado do sidebar (aberto ou fechado)
+sidebarOpen: boolean = true;
+isDraggingDevice = false;
+
+/**
+ * Remove um dispositivo da área de trabalho.
+ * @param dispositivo - O dispositivo a ser removido.
+ */
+removerDispositivo(dispositivo: DispositivoRede) {
+  const index = this.elements.indexOf(dispositivo);
+  if (index > -1) {
+    this.elements.splice(index, 1);
+  }
+}
 
   /**
    * Alterna a visibilidade de uma seção dentro da área de trabalho.
