@@ -1,12 +1,39 @@
 <div
   class="dispositivo-rede"
+  (contextmenu)="abrirContextMenu($event)"
   [ngStyle]="{
-    left: dispositivo.x + 'px',
-    top: dispositivo.y + 'px',
+    left: x + 'px',
+    top: y + 'px',
     width: dispositivo.width + 'px',
-    height: dispositivo.height + 'px',
+    height: dispositivo.height + 'px'
   }"
 >
   <img [src]="dispositivo.icon" alt="Ícone do dispositivo" />
-  <div class="titulo">{{ dispositivo.nome }}</div>
+
+  <div class="titulo" *ngIf="!editandoNome" (dblclick)="ativarEdicao()">
+    {{ dispositivo.nome }}
+  </div>
+
+  <div class="titulo" *ngIf="editandoNome">
+    <input
+      [(ngModel)]="dispositivo.nome"
+      (blur)="desativarEdicao()"
+      (keydown.enter)="desativarEdicao()"
+      autofocus
+    />
+  </div>
 </div>
+
+<ul
+  class="context-menu"
+  *ngIf="contextMenuVisivel"
+  [ngStyle]="{
+    top: posicaoMenu.y + 'px',
+    left: posicaoMenu.x + 'px',
+    position: 'absolute'
+  }"
+  (click)="fecharContextMenu()"
+>
+  <li (click)="mostrarPropriedades()">Propriedades</li>
+  <li (click)="excluirDispositivo()">Excluir</li>
+</ul>
