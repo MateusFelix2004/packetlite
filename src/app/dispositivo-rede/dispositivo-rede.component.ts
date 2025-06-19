@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, ElementRef, OnInit } from '@angular/core';
 import { DispositivoRede } from '../dispositivos/dispositivo-rede';
 import { CommonModule } from '@angular/common';
-import { ZoomService } from '../area-de-trabalho/zoom.service';  // import do serviço
+import { ZoomService } from '../area-de-trabalho/zoom.service';
 
 @Component({
   selector: 'app-dispositivo-rede',
@@ -10,18 +10,33 @@ import { ZoomService } from '../area-de-trabalho/zoom.service';  // import do se
   templateUrl: './dispositivo-rede.component.html',
   styleUrls: ['./dispositivo-rede.component.css']
 })
-export class DispositivoRedeComponent {
+export class DispositivoRedeComponent implements OnInit {
   @Input() dispositivo!: DispositivoRede;
   @Output() posicaoMudou = new EventEmitter<{ x: number; y: number }>();
+  @Output() excluir = new EventEmitter<void>();
 
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
 
+  x: number = 0;
+  y: number = 0;
+
+  editandoNome: boolean = false;
+  contextMenuVisivel: boolean = false;
+  posicaoMenu = { x: 0, y: 0 };
+
   constructor(private el: ElementRef, private zoomService: ZoomService) {}
 
+  ngOnInit() {
+    this.x = this.dispositivo.x;
+    this.y = this.dispositivo.y;
+  }
+
   moverPara(x: number, y: number) {
-    this.dispositivo.moverPara(x, y);
+    this.x = x;
+    this.y = y;
+    this.posicaoMudou.emit({ x, y });
   }
 
   inicializarDispositivo() {
@@ -43,14 +58,10 @@ export class DispositivoRedeComponent {
     if (!workspace) return;
 
     const rect = workspace.getBoundingClientRect();
-
-    // Pega a escala atual do serviço (síncrono)
     const scale = this.zoomService.getScale();
-
-    // Pega translate X e Y da workspace do estilo computado (continuar usando o DOM aqui)
     const transform = window.getComputedStyle(workspace).transform;
-    let offsetXWorkspace = 0, offsetYWorkspace = 0;
 
+    let offsetXWorkspace = 0, offsetYWorkspace = 0;
     if (transform && transform !== 'none') {
       const match = transform.match(/matrix\(([^)]+)\)/);
       if (match) {
@@ -60,8 +71,8 @@ export class DispositivoRedeComponent {
       }
     }
 
-    this.offsetX = (event.clientX - rect.left - offsetXWorkspace) / scale - this.dispositivo.x;
-    this.offsetY = (event.clientY - rect.top - offsetYWorkspace) / scale - this.dispositivo.y;
+    this.offsetX = (event.clientX - rect.left - offsetXWorkspace) / scale - this.x;
+    this.offsetY = (event.clientY - rect.top - offsetYWorkspace) / scale - this.y;
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -75,14 +86,10 @@ export class DispositivoRedeComponent {
     if (!workspace) return;
 
     const rect = workspace.getBoundingClientRect();
-
-    // Pega escala atual do serviço
     const scale = this.zoomService.getScale();
-
-    // Pega translate X e Y da workspace do estilo computado
     const transform = window.getComputedStyle(workspace).transform;
-    let offsetXWorkspace = 0, offsetYWorkspace = 0;
 
+    let offsetXWorkspace = 0, offsetYWorkspace = 0;
     if (transform && transform !== 'none') {
       const match = transform.match(/matrix\(([^)]+)\)/);
       if (match) {
@@ -92,12 +99,13 @@ export class DispositivoRedeComponent {
       }
     }
 
-    const newX = (event.clientX - rect.left - this.offsetX - offsetXWorkspace) / scale;
-    const newY = (event.clientY - rect.top - this.offsetY - offsetYWorkspace) / scale;
+    this.x = (event.clientX - rect.left - this.offsetX - offsetXWorkspace) / scale;
+    this.y = (event.clientY - rect.top - this.offsetY - offsetYWorkspace) / scale;
 
-    this.dispositivo.x = newX;
-    this.dispositivo.y = newY;
-    this.posicaoMudou.emit({ x: newX, y: newY });
+    this.posicaoMudou.emit({ x: this.x, y: this.y });
+
+    this.dispositivo.x = this.x;
+    this.dispositivo.y = this.y;
   }
 
   @HostListener('document:mouseup', ['$event'])
@@ -107,5 +115,34 @@ export class DispositivoRedeComponent {
       event.stopPropagation();
     }
     this.isDragging = false;
+  }
+
+  @HostListener('document:click')
+  fecharContextMenu() {
+    this.contextMenuVisivel = false;
+  }
+
+  ativarEdicao() {
+    this.editandoNome = true;
+  }
+
+  desativarEdicao() {
+    this.editandoNome = false;
+  }
+
+  abrirContextMenu(event: MouseEvent) {
+    event.preventDefault();
+    this.contextMenuVisivel = true;
+    this.posicaoMenu = { x: event.clientX, y: event.clientY };
+  }
+
+  mostrarPropriedades() {
+    console.log('Propriedades do dispositivo:', this.dispositivo);
+    this.contextMenuVisivel = false;
+  }
+
+  excluirDispositivo() {
+    this.excluir.emit();
+    this.contextMenuVisivel = false;
   }
 }
