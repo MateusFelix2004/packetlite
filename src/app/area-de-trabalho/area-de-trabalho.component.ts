@@ -5,6 +5,7 @@ import { Switch } from '../dispositivos/switch/switch';
 import { DispositivoRede } from '../dispositivos/dispositivo-rede';
 import { CommonModule } from '@angular/common';
 import { DispositivoRedeComponent } from '../dispositivo-rede/dispositivo-rede.component';
+import { PainelFerramentasComponent } from '../painel-ferramentas/painel-ferramentas.component';
 
 /**
  * Componente que gerencia a área de trabalho (workspace) com funcionalidades de zoom e arraste.
@@ -12,59 +13,19 @@ import { DispositivoRedeComponent } from '../dispositivo-rede/dispositivo-rede.c
 @Component({
   selector: 'app-area-de-trabalho',
   standalone: true,
-  imports: [DispositivoRedeComponent, CommonModule],
+  imports: [DispositivoRedeComponent, PainelFerramentasComponent,CommonModule],
   templateUrl: './area-de-trabalho.component.html',
-  styleUrls: ['./area-de-trabalho.component.css'] // corrigido para styleUrls (plural)
+  styleUrls: ['./area-de-trabalho.component.css']
 })
 export class AreaDeTrabalhoComponent {
 
-// Estado do sidebar (aberto ou fechado)
-sidebarOpen: boolean = true;
-isDraggingDevice = false;
+  // Indica se um dispositivo está sendo arrastado na workspace
+  isDraggingDevice = false;
 
-/**
- * Remove um dispositivo da área de trabalho.
- * @param dispositivo - O dispositivo a ser removido.
- */
-removerDispositivo(dispositivo: DispositivoRede) {
-  const index = this.elements.indexOf(dispositivo);
-  if (index > -1) {
-    this.elements.splice(index, 1);
-  }
-}
-
-  /**
-   * Alterna a visibilidade de uma seção dentro da área de trabalho.
-   * @param event - Evento de clique no cabeçalho da seção.
-   */
-  toggleSection(event: Event) {
-    const header = event.currentTarget as HTMLElement;
-    const content = header.nextElementSibling as HTMLElement;
-    const icon = header.querySelector('[data="icon"]');
-
-    const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
-
-    // Alteração do estado de abertura da seção
-    if (isOpen) {
-      content.style.maxHeight = '0px';
-      if (icon) icon.textContent = 'chevron_right';
-    } else {
-      content.style.maxHeight = content.scrollHeight + 'px';
-      if (icon) icon.textContent = 'expand_more';
-    }
-  }
-
-  /**
-   * Alterna o estado de abertura do sidebar.
-   */
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
-
-  // Elementos interativos na workspace
+  // Elementos/dispositivos na workspace
   elements: DispositivoRede[] = [];
 
-  // Estado e variáveis para movimentação e zoom
+  // Estado e variáveis para movimentação e zoom da workspace
   isDragging: boolean = false;
   dragStartX: number = 0;
   dragStartY: number = 0;
@@ -72,31 +33,27 @@ removerDispositivo(dispositivo: DispositivoRede) {
   offsetY: number = 0;
   scale: number = 1;
 
-  // Variáveis para manipulação de zoom por pinça
+  // Variáveis para manipulação de zoom por pinça (touch)
   initialPinchDistance: number | null = null;
   initialScale: number = 1;
 
   /**
    * Manipula o evento de zoom utilizando o scroll do mouse.
-   * @param event - Evento de rolagem do mouse.
+   * @param event Evento de rolagem do mouse.
    */
   onZoom(event: WheelEvent): void {
     const zoomFactor = event.deltaY < 0 ? 1.05 : 0.95;
     this.scale *= zoomFactor;
 
-    // Limita o zoom entre 0.1 e 5
-    if (this.scale < 0.1) {
-      this.scale = 0.1;
-    } else if (this.scale > 5) {
-      this.scale = 5;
-    }
+    if (this.scale < 0.1) this.scale = 0.1;
+    else if (this.scale > 5) this.scale = 5;
 
     this.updateTransform();
   }
 
   /**
-   * Inicia o processo de arraste (drag) de um elemento, tanto para mouse quanto para touch.
-   * @param event - Evento de início de arraste (mouse ou toque).
+   * Inicia o processo de arraste da workspace (drag) para mouse ou touch.
+   * @param event Evento de início do arraste.
    */
   onDragStart(event: MouseEvent | TouchEvent): void {
     if (event instanceof TouchEvent) {
@@ -116,19 +73,24 @@ removerDispositivo(dispositivo: DispositivoRede) {
     }
   }
 
-  // Método chamado quando o dispositivo começa a ser arrastado (drag)
+  /**
+   * Método chamado quando o dispositivo começa a ser arrastado (drag).
+   */
   onDispositivoDragStart() {
     this.isDraggingDevice = true;
   }
 
-  // Método chamado quando o dispositivo termina o arraste (drop)
+  /**
+   * Método chamado quando o dispositivo termina o arraste (drop).
+   */
   onDispositivoDragEnd() {
     this.isDraggingDevice = false;
   }
 
   /**
-   * Atualiza a posição do arraste enquanto o usuário está movendo o mouse ou toque.
-   * @param event - Evento de movimentação (mouse ou toque).
+   * Atualiza a posição durante o arraste da workspace.
+   * Bloqueia movimentação se estiver arrastando dispositivo.
+   * @param event Evento de movimentação (mouse ou touch).
    */
   onDragMove(event: MouseEvent | TouchEvent): void {
     if (this.isDraggingDevice) return; // bloqueia pan enquanto arrasta dispositivo
@@ -177,7 +139,7 @@ removerDispositivo(dispositivo: DispositivoRede) {
   }
 
   /**
-   * Atualiza a transformação de escala e posição da área de trabalho.
+   * Atualiza a transformação de escala e posição da workspace.
    */
   updateTransform(): void {
     const area = document.querySelector('.workspace-area') as HTMLElement;
@@ -187,10 +149,10 @@ removerDispositivo(dispositivo: DispositivoRede) {
   }
 
   /**
-   * Calcula a distância entre dois pontos de toque (utilizado para zoom por pinça).
-   * @param touch1 - Primeiro ponto de toque.
-   * @param touch2 - Segundo ponto de toque.
-   * @returns A distância entre os dois toques.
+   * Calcula a distância entre dois toques (para zoom por pinça).
+   * @param touch1 Primeiro ponto de toque.
+   * @param touch2 Segundo ponto de toque.
+   * @returns Distância entre os toques.
    */
   getDistance(touch1: Touch, touch2: Touch): number {
     const dx = touch1.clientX - touch2.clientX;
@@ -199,26 +161,24 @@ removerDispositivo(dispositivo: DispositivoRede) {
   }
 
   /**
-   * Obtém a posição do toque em relação à página.
-   * @param touch - O toque atual.
-   * @returns A posição do toque.
+   * Obtém a posição do toque na tela.
+   * @param touch Toque atual.
+   * @returns Objeto com x e y.
    */
   getTouchPoint(touch: Touch): { x: number; y: number } {
     return { x: touch.clientX, y: touch.clientY };
   }
 
-  // SIDE BAR DRAG AND DROP
-
+  // Controle do tipo de dispositivo sendo arrastado da sidebar
   draggingType: string | null = null;
 
   /**
-   * Referências para as imagens dos elementos
+   * Referências para as imagens dos elementos para drag image.
    */
   elementImages: { [key: string]: HTMLImageElement } = {
     'computador': new Image(),
     'roteador': new Image(),
     'switch': new Image(),
-    // Adicione outras imagens conforme necessário
   };
 
   constructor() {
@@ -233,7 +193,7 @@ removerDispositivo(dispositivo: DispositivoRede) {
   }
 
   /**
-   * Iniciado ao arrastar um item da sidebar
+   * Iniciado ao arrastar um item da sidebar.
    */
   onSidebarDragStart(event: DragEvent, type: string): void {
     this.draggingType = type;
@@ -255,14 +215,14 @@ removerDispositivo(dispositivo: DispositivoRede) {
   }
 
   /**
-   * Permite o drop sobre a workspace
+   * Permite o drop sobre a workspace.
    */
   onWorkspaceDragOver(event: DragEvent): void {
     event.preventDefault();
   }
 
   /**
-   * Solta o elemento na posição do cursor
+   * Solta o elemento na posição do cursor.
    */
   onWorkspaceDrop(event: DragEvent): void {
     event.preventDefault();
@@ -281,15 +241,14 @@ removerDispositivo(dispositivo: DispositivoRede) {
     const dropX = (clientX - rect.left - width / 2 - this.offsetX) / this.scale;
     const dropY = (clientY - rect.top - height / 2 - this.offsetY) / this.scale;
 
-    // Criação baseada no tipo
     let novoDispositivo: DispositivoRede | null = null;
 
     if (type === 'computador') {
       novoDispositivo = new Computador(
         `pc-${Date.now()}`,
         'Computador',
-        undefined,
-        undefined,
+        '192.168.0.10',       // IP padrão
+        'AA:BB:CC:DD:EE:01',  // MAC fictício
         dropX,
         dropY
       );
@@ -297,9 +256,7 @@ removerDispositivo(dispositivo: DispositivoRede) {
       novoDispositivo = new Roteador(
         `rt-${Date.now()}`,
         'Roteador',
-        '192.168.0.1',   // IP padrão
-        '00:00:00:00:00:01', // MAC fictício padrão
-        'MinhaRede',     // SSID padrão
+        'MinhaRede',         // SSID padrão
         dropX,
         dropY
       );
@@ -307,9 +264,7 @@ removerDispositivo(dispositivo: DispositivoRede) {
       novoDispositivo = new Switch(
         `sw-${Date.now()}`,
         'Switch',
-        8,              // número padrão de portas
-        undefined,      // IP (geralmente switches não têm IP, exceto gerenciáveis)
-        '00:00:00:00:00:02', // MAC fictício padrão
+        8,                   // número padrão de portas
         dropX,
         dropY
       );
@@ -325,13 +280,23 @@ removerDispositivo(dispositivo: DispositivoRede) {
 
   /**
    * Atualiza a posição de um dispositivo na workspace.
-   * @param element - Dispositivo a ser atualizado.
-   * @param posicao - Nova posição x,y.
+   * @param element Dispositivo a ser atualizado.
+   * @param posicao Nova posição x,y.
    */
-  atualizarPosicao(element: DispositivoRede, posicao: {x: number, y: number}) {
+  atualizarPosicao(element: DispositivoRede, posicao: { x: number; y: number }) {
     element.x = posicao.x;
     element.y = posicao.y;
     // Pode salvar estado ou fazer outras atualizações aqui
   }
-  
+
+  /**
+ * Remove um dispositivo da área de trabalho.
+ * @param dispositivo - O dispositivo a ser removido.
+ */
+removerDispositivo(dispositivo: DispositivoRede) {
+  const index = this.elements.indexOf(dispositivo);
+  if (index > -1) {
+    this.elements.splice(index, 1);
+  }
+}
 }

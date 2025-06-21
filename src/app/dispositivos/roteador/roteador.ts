@@ -1,4 +1,5 @@
 import { DispositivoRede } from '../dispositivo-rede';
+import { InterfaceRede } from '../interface-rede'; // ajuste o caminho conforme necessário
 
 /**
  * Classe que representa um roteador na rede.
@@ -12,27 +13,30 @@ export class Roteador extends DispositivoRede {
   constructor(
     id: string,
     nome: string,
-    ip: string,
-    mac: string,
     ssid?: string,
     x: number = 0,
     y: number = 0
   ) {
+    // Exemplo: criar 4 interfaces padrão para o roteador, você pode ajustar conforme o necessário
+    const interfaces: InterfaceRede[] = [];
+    for (let i = 1; i <= 4; i++) {
+      interfaces.push(new InterfaceRede(`iface-${i}`, `porta${i}`, 'livre'));
+    }
+
     super(
       id,
       nome,
       'roteador',
       'inativo',
-      ip,
-      mac,
-      [],   // interfaces
-      [],   // conexoes
+      interfaces,   // interfaces com as portas
+      [],          // conexoes
       x,
       y,
-      140,  // largura (um pouco maior para roteador)
-      100,  // altura
+      140,         // largura (um pouco maior para roteador)
+      100,         // altura
       'assets/dispositivos/icones/roteador/roteador.svg' // ícone padrão roteador
     );
+
     this.ssid = ssid;
   }
 
@@ -48,6 +52,8 @@ export class Roteador extends DispositivoRede {
 
   /**
    * Exemplo de método específico: alterar o SSID do roteador.
+   * 
+   * @param novoSSID Novo SSID a ser configurado.
    */
   configurarSSID(novoSSID: string): void {
     this.ssid = novoSSID;

@@ -1,0 +1,151 @@
+/* Sidebar */
+.sidebar {
+    position: fixed;        /* fixo na tela */
+    top: 60px;              /* ajuste conforme seu header */
+    left: 0;
+    width: 400px;           /* largura aberta */
+    height: calc(100vh - 60px);
+    background-color: #333333;
+    color: #F8F9FA;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    overflow-y: auto;
+    transition: width 0.3s ease;
+    z-index: 1000;          /* na frente dos outros elementos */
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+  
+  .sidebar.closed {
+    width: 5px;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  /* Botão fixado ao lado da sidebar */
+  .toggle-sidebar-btn {
+    position: fixed;
+    top: 65px;             /* alinhado ao topo da sidebar */
+    left: 400px;           /* ao lado da sidebar aberta */
+    background-color: #333;
+    border: 1px solid #555;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;          /* acima da sidebar */
+    color: #fff;
+    transition: left 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  /* Quando sidebar está fechada, botão se move para borda */
+  .sidebar.closed ~ .toggle-sidebar-btn {
+    left: 5px;             /* ao lado da sidebar fechada */
+  }
+  
+  /* Seções colapsáveis */
+  .collapsible-section {
+    margin-bottom: 16px;
+    border: 1px solid #555;
+    border-radius: 6px;
+  }
+  
+  .collapsible-header {
+    width: 100%;
+    background-color: #444;
+    color: #F8F9FA;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .collapsible-header:hover {
+    background-color: #555;
+  }
+  
+  .collapsible-header .collapse-arrow {
+    transition: transform 0.3s ease;
+  }
+  
+  .collapsible-section.active .collapsible-header .collapse-arrow {
+    transform: rotate(180deg);
+  }
+  
+  .collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: #2d2d2d;
+  }
+  
+  .collapsible-section.active .collapsible-content {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .collapsible-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .collapsible-content a {
+    display: block;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: #F8F9FA;
+  }
+  
+  .collapsible-content a:hover {
+    background-color: #007BFF;
+  }
+  
+  /* Grid de ferramentas */
+  .collapsible-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .grid-item {
+    background-color: transparent;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    color: #F8F9FA;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .grid-item:hover {
+    background-color: #555;
+  }
+  
+  .grid-item img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-bottom: 8px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .grid-item span {
+    display: block;
+  }
+  

@@ -1,0 +1,50 @@
+<aside class="sidebar" [class.closed]="!sidebarOpen">
+
+    <div class="collapsible-section">
+      <button class="collapsible-header" (click)="toggleSection($event)"><span class="material-symbols-outlined icon" data="icon">chevron_right</span>Dispositivos</button>
+      <div class="collapsible-content">
+        <div class="collapsible-grid">
+          <div 
+            class="grid-item"
+            draggable="true"
+            (dragstart)="onSidebarDragStart($event, 'switch')"
+          >
+            <img src="assets/dispositivos/icones/switch/switch.svg" alt="Switch">
+            <span>Switch</span>
+          </div>
+          <div 
+            class="grid-item"
+            draggable="true"
+            (dragstart)="onSidebarDragStart($event, 'roteador')"
+          >
+            <img src="assets/dispositivos/icones/roteador/roteador.svg" alt="Roteador">
+            <span>Roteador</span>
+          </div>
+
+        <div
+          class="grid-item"
+          draggable="true"
+          (dragstart)="onSidebarDragStart($event, 'computador')"
+        >
+          <img src="assets/dispositivos/icones/computador/computador.svg" alt="Computador">
+          <span>Computador</span>
+        </div>
+
+          <!-- Adicione mais conforme necessário -->
+        </div>
+      </div>
+    </div>
+    <div class="collapsible-section">
+      <button class="collapsible-header" (click)="toggleSection($event)"><span class="material-symbols-outlined icon" data="icon">chevron_right</span>Cabeamentos</button>
+      <div class="collapsible-content">
+        <ul>
+          <li><a href="#">Cabo de Rede</a></li>
+          <li><a href="#">Fibra Óptica</a></li>
+        </ul>
+      </div>
+    </div>
+    
+</aside>
+<button class="toggle-sidebar-btn" (click)="toggleSidebar()" title="Ferramentas">
+    <span class="material-symbols-outlined">{{ sidebarOpen ? 'chevron_left' : 'chevron_right' }}</span>
+</button>

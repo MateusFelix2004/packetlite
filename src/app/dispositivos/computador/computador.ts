@@ -1,4 +1,5 @@
 import { DispositivoRede } from '../dispositivo-rede';
+import { InterfaceRede } from '../interface-rede'; // ajuste o caminho conforme seu projeto
 
 /**
  * Classe que representa um computador na rede.
@@ -13,8 +14,10 @@ export class Computador extends DispositivoRede {
    * 
    * @param id Identificador único do computador.
    * @param nome Nome descritivo do computador.
-   * @param ip Endereço IP.
-   * @param mac Endereço MAC.
+   * @param ip Endereço IP inicial da interface principal (opcional).
+   * @param mac Endereço MAC inicial da interface principal (opcional).
+   * @param x Posição horizontal no plano.
+   * @param y Posição vertical no plano.
    */
   constructor(
     id: string,
@@ -24,20 +27,21 @@ export class Computador extends DispositivoRede {
     x: number = 0,
     y: number = 0
   ) {
+    // Cria a interface padrão (ex: "eth0") para o computador
+    const interfacePrincipal = new InterfaceRede('iface-1', 'eth0', 'livre', ip, mac);
+
     super(
       id,
       nome,
       'computador',
       'inativo',
-      ip,
-      mac,
-      [], // interfaces
-      [], // conexões
-      x,  // x
-      y,  // y
-      100, // largura
-      100, // altura
-      'assets/dispositivos/icones/computador/computador.svg' // ícone padrão
+      [interfacePrincipal], // interfaces agora com a interface principal criada
+      [],                   // conexões
+      x,
+      y,
+      100,
+      100,
+      'assets/dispositivos/icones/computador/computador.svg'
     );
   }
 
@@ -57,11 +61,16 @@ export class Computador extends DispositivoRede {
   }
 
   /**
-   * Define um novo endereço IP para o computador.
+   * Define um novo endereço IP para a interface principal do computador.
+   * Caso haja mais de uma interface, esta função altera a primeira.
    * 
    * @param novoIP Novo IP a ser atribuído.
    */
   configurarIP(novoIP: string): void {
-    this.ip = novoIP;
+    if (this.interfaces.length > 0) {
+      this.interfaces[0].alterarIp(novoIP);
+    } else {
+      console.warn(`[${this.nome}] Nenhuma interface disponível para configurar IP.`);
+    }
   }
 }

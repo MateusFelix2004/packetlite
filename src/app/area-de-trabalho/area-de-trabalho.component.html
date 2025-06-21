@@ -1,106 +1,56 @@
+<header class="header">
+  <div class="logo">PacketLite</div>
+  <nav class="nav">
+    <ul>
+      <li><a href="#">Arquivo</a></li>
+      <li><a href="#">Importar</a></li>
+      <li><a href="#">Exportar</a></li>
+      <li class="dropdown">
+        <a href="#">Configurações <span class="arrow">&#9662;</span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Salvar</a></li>
+          <li><a href="#">Salvar como</a></li>
+          <li><a href="#">Abrir recente</a></li>
+          <li><a href="#">Preferências</a></li>
+          <li><a href="#">Ajuda</a></li>
+          <li><a href="#">Sobre</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <div class="profile">
+    <img src="https://via.placeholder.com/40" alt="Usuário" class="profile-img">
+  </div>
+</header>
 
-  <header class="header">
-    <div class="logo">PacketLite</div>
-    <nav class="nav">
-      <ul>
-        <li><a href="#">Arquivo</a></li>
-        <li><a href="#">Importar</a></li>
-        <li><a href="#">Exportar</a></li>
-        <li class="dropdown">
-          <a href="#">Configurações <span class="arrow">&#9662;</span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Salvar</a></li>
-            <li><a href="#">Salvar como</a></li>
-            <li><a href="#">Abrir recente</a></li>
-            <li><a href="#">Preferências</a></li>
-            <li><a href="#">Ajuda</a></li>
-            <li><a href="#">Sobre</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
-    <div class="profile">
-      <img src="https://via.placeholder.com/40" alt="Usuário" class="profile-img">
+<main class="main-content">
+
+  <app-painel-ferramentas
+    (arrastarDispositivo)="onSidebarDragStart($event.event, $event.tipo)"
+  ></app-painel-ferramentas>
+
+  <section
+    class="workspace"
+    (wheel)="onZoom($event)"
+    (mousedown)="onDragStart($event)"
+    (mousemove)="onDragMove($event)"
+    (mouseup)="onDragEnd()"
+    (mouseleave)="onDragEnd()"
+    (touchstart)="onDragStart($event)"
+    (touchmove)="onDragMove($event)"
+    (touchend)="onDragEnd()"
+    (touchcancel)="onDragEnd()"
+    (dragover)="onWorkspaceDragOver($event)"
+    (drop)="onWorkspaceDrop($event)"
+    style="touch-action: none;"
+  >
+    <div class="workspace-area">
+      <app-dispositivo-rede
+        *ngFor="let element of elements"
+        [dispositivo]="element"
+        (excluir)="removerDispositivo(element)"
+        (posicaoMudou)="atualizarPosicao(element, $event)"
+      />
     </div>
-  </header>
-  <main class="main-content">
-
-    <aside class="sidebar" [class.closed]="!sidebarOpen">
-
-        <div class="collapsible-section">
-          <button class="collapsible-header" (click)="toggleSection($event)"><span class="material-symbols-outlined icon" data="icon">chevron_right</span>Dispositivos</button>
-          <div class="collapsible-content">
-            <div class="collapsible-grid">
-              <div 
-                class="grid-item"
-                draggable="true"
-                (dragstart)="onSidebarDragStart($event, 'switch')"
-              >
-                <img src="assets/dispositivos/icones/switch/switch.svg" alt="Switch">
-                <span>Switch</span>
-              </div>
-              <div 
-                class="grid-item"
-                draggable="true"
-                (dragstart)="onSidebarDragStart($event, 'roteador')"
-              >
-                <img src="assets/dispositivos/icones/roteador/roteador.svg" alt="Roteador">
-                <span>Roteador</span>
-              </div>
-
-            <div
-              class="grid-item"
-              draggable="true"
-              (dragstart)="onSidebarDragStart($event, 'computador')"
-            >
-              <img src="assets/dispositivos/icones/computador/computador.svg" alt="Computador">
-              <span>Computador</span>
-            </div>
-
-              <!-- Adicione mais conforme necessário -->
-            </div>
-          </div>
-        </div>
-        <div class="collapsible-section">
-          <button class="collapsible-header" (click)="toggleSection($event)"><span class="material-symbols-outlined icon" data="icon">chevron_right</span>Cabeamentos</button>
-          <div class="collapsible-content">
-            <ul>
-              <li><a href="#">Cabo de Rede</a></li>
-              <li><a href="#">Fibra Óptica</a></li>
-            </ul>
-          </div>
-        </div>
-        
-    </aside>
-    <button class="toggle-sidebar-btn" (click)="toggleSidebar()" title="Ferramentas">
-        <span class="material-symbols-outlined">{{ sidebarOpen ? 'chevron_left' : 'chevron_right' }}</span>
-    </button>
-    <section class="workspace"
-      (wheel)="onZoom($event)"
-      (mousedown)="onDragStart($event)"
-      (mousemove)="onDragMove($event)"
-      (mouseup)="onDragEnd()"
-      (mouseleave)="onDragEnd()"
-      (touchstart)="onDragStart($event)"
-      (touchmove)="onDragMove($event)"
-      (touchend)="onDragEnd()"
-      (touchcancel)="onDragEnd()"
-      (dragover)="onWorkspaceDragOver($event)"
-      (drop)="onWorkspaceDrop($event)"
-      style="touch-action: none;"
-    >
-        <div class="workspace-area">
-          <app-dispositivo-rede
-            *ngFor="let element of elements"
-            [dispositivo]="element"
-            (posicaoMudou)="atualizarPosicao(element, $event)"
-          />
-
-        </div>
-    </section>
-  </main>
-  <!--
-  <footer class="footer">
-    <p>&copy; 2025 PacketLite</p>
-  </footer>
-  -->
+  </section>
+</main>

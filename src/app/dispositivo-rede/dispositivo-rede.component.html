@@ -16,10 +16,10 @@
 
   <div class="titulo" *ngIf="editandoNome">
     <input
+      #inputNome
       [(ngModel)]="dispositivo.nome"
       (blur)="desativarEdicao()"
       (keydown.enter)="desativarEdicao()"
-      autofocus
     />
   </div>
 </div>

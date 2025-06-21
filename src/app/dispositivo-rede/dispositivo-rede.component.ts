@@ -1,12 +1,22 @@
-import { Component, Input, Output, EventEmitter, HostListener, ElementRef, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  HostListener,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { DispositivoRede } from '../dispositivos/dispositivo-rede';
 import { CommonModule } from '@angular/common';
 import { ZoomService } from '../area-de-trabalho/zoom.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dispositivo-rede',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dispositivo-rede.component.html',
   styleUrls: ['./dispositivo-rede.component.css']
 })
@@ -14,6 +24,8 @@ export class DispositivoRedeComponent implements OnInit {
   @Input() dispositivo!: DispositivoRede;
   @Output() posicaoMudou = new EventEmitter<{ x: number; y: number }>();
   @Output() excluir = new EventEmitter<void>();
+
+  @ViewChild('inputNome') inputNome!: ElementRef<HTMLInputElement>;
 
   private isDragging = false;
   private offsetX = 0;
@@ -124,6 +136,11 @@ export class DispositivoRedeComponent implements OnInit {
 
   ativarEdicao() {
     this.editandoNome = true;
+
+    // Foca o input após renderização
+    setTimeout(() => {
+      this.inputNome?.nativeElement.focus();
+    });
   }
 
   desativarEdicao() {

@@ -1,3 +1,5 @@
+import { InterfaceRede } from './interface-rede';
+
 /**
  * Classe abstrata que representa um dispositivo de rede genérico.
  *
@@ -13,9 +15,7 @@ export abstract class DispositivoRede {
    * @param nome Nome descritivo do dispositivo.
    * @param tipo Tipo do dispositivo (ex: 'computador', 'switch', 'roteador').
    * @param estado Estado atual do dispositivo: 'ativo' ou 'inativo'.
-   * @param ip Endereço IP do dispositivo (opcional).
-   * @param mac Endereço MAC do dispositivo (opcional).
-   * @param interfaces Lista de nomes ou identificadores de interfaces de rede.
+   * @param interfaces Lista de objetos InterfaceRede que representam as interfaces físicas ou lógicas do dispositivo.
    * @param conexoes Lista de outros dispositivos conectados a este.
    * @param x Posição horizontal (em pixels) do dispositivo no plano.
    * @param y Posição vertical (em pixels) do dispositivo no plano.
@@ -28,9 +28,7 @@ export abstract class DispositivoRede {
     public nome: string,
     public tipo: string,
     public estado: 'ativo' | 'inativo' = 'inativo',
-    public ip?: string,
-    public mac?: string,
-    public interfaces: string[] = [],
+    public interfaces: InterfaceRede[] = [],
     public conexoes: DispositivoRede[] = [],
     public x: number = 0,
     public y: number = 0,
@@ -90,5 +88,37 @@ export abstract class DispositivoRede {
   moverPara(x: number, y: number): void {
     this.x = x;
     this.y = y;
+  }
+
+  /**
+   * Altera o IP de uma interface específica identificada pelo seu ID.
+   * 
+   * @param interfaceId ID da interface que terá o IP alterado.
+   * @param novoIp Novo endereço IP a ser atribuído.
+   * @returns true se a interface foi encontrada e alterada; false caso contrário.
+   */
+  alterarIpInterface(interfaceId: string, novoIp: string): boolean {
+    const iface = this.interfaces.find(i => i.id === interfaceId);
+    if (iface) {
+      iface.alterarIp(novoIp);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Altera a máscara de rede de uma interface específica identificada pelo seu ID.
+   * 
+   * @param interfaceId ID da interface que terá a máscara alterada.
+   * @param novaMascara Nova máscara de rede a ser atribuída.
+   * @returns true se a interface foi encontrada e alterada; false caso contrário.
+   */
+  alterarMascaraInterface(interfaceId: string, novaMascara: string): boolean {
+    const iface = this.interfaces.find(i => i.id === interfaceId);
+    if (iface) {
+      iface.alterarMascara(novaMascara);
+      return true;
+    }
+    return false;
   }
 }
